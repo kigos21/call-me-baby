@@ -114,6 +114,7 @@
         android:background="@android:color/transparent"
         android:layout_marginRight="24dp"
         android:layout_marginBottom="24dp"
+        android:contentDescription="Create new contact"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/create_link" />

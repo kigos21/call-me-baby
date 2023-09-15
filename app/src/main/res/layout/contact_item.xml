@@ -24,7 +24,7 @@
         android:layout_height="20dp"
         android:scaleX="1"
         android:scaleY="1"
-        android:buttonTint="@color/foreground"
+        android:buttonTint="@color/accent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
