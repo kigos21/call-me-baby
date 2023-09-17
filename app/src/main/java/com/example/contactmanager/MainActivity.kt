@@ -1,5 +1,6 @@
 package com.example.contactmanager
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.os.IResultReceiver._Parcel
@@ -22,13 +23,18 @@ class MainActivity : AppCompatActivity() {
         binding.rvContactItems.adapter = contactAdapter
         binding.rvContactItems.layoutManager = LinearLayoutManager(this)
 
+//        binding.ibCreateLink.setOnClickListener {
+//            val newContact = Contact(binding.etNewContactName.text.toString(), binding.etNewContactNumber.text.toString())
+//            if (newContact.name.isNotBlank() && newContact.mobileNo.isNotBlank()) {
+//                contactAdapter.addContact(newContact)
+//                binding.etNewContactName.text.clear()
+//                binding.etNewContactNumber.text.clear()
+//            }
+//        }
+
         binding.ibCreateLink.setOnClickListener {
-            val newContact = Contact(binding.etNewContactName.text.toString(), binding.etNewContactNumber.text.toString())
-            if (newContact.name.isNotBlank() && newContact.mobileNo.isNotBlank()) {
-                contactAdapter.addContact(newContact)
-                binding.etNewContactName.text.clear()
-                binding.etNewContactNumber.text.clear()
-            }
+            val newContactActivityIntent = Intent(this, NewContactActivity::class.java)
+            this.startActivity(newContactActivityIntent)
         }
 
         binding.cbShowFavorites.setOnCheckedChangeListener { _, isChecked ->
