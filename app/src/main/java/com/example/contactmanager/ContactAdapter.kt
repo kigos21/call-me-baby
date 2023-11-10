@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.contactmanager.databinding.ContactItemBinding
+import java.io.Serializable
 
 class ContactAdapter(
     private var contacts: MutableList<Contact>
@@ -24,13 +25,6 @@ class ContactAdapter(
             false
         )
         return ContactViewHolder(binding);
-//        return ContactViewHolder(
-//            LayoutInflater.from(parent.context).inflate(
-//                R.layout.contact_item,
-//                parent,
-//                false,
-//            )
-//        )
     }
 
     fun addContact(newContact: Contact) {
@@ -63,16 +57,13 @@ class ContactAdapter(
 
     override fun onBindViewHolder(holder: ContactViewHolder, i: Int) {
         val currentContact = contacts[i]
-//        holder.binding.apply {
-//            tvContactTitle.text = currentContact.name
-//            cbFavorite.isChecked = currentContact.isFavorite
-//            cbFavorite.setOnCheckedChangeListener { _, isChecked ->
-//                currentContact.isFavorite = isChecked
-//            }
-//        }
         holder.binding.tvContactTitle.text = currentContact.name
         holder.binding.cbFavorite.isChecked = currentContact.isFavorite
         holder.binding.cbFavorite.setOnCheckedChangeListener { _, isChecked -> currentContact.isFavorite = isChecked }
+    }
+
+    fun forceNotifyDataSetChanged() {
+        notifyDataSetChanged()
     }
 }
 
