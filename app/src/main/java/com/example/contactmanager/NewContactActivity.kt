@@ -5,13 +5,15 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.contactmanager.databinding.ActivityNewContactBinding
+import com.google.firebase.database.FirebaseDatabase
+import java.util.regex.Pattern
 
 class NewContactActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityNewContactBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val binding = ActivityNewContactBinding.inflate(layoutInflater)
+        binding = ActivityNewContactBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         binding.ibBackButton.setOnClickListener {
@@ -20,17 +22,33 @@ class NewContactActivity : AppCompatActivity() {
         }
 
         binding.ibCreateContactButton.setOnClickListener {
-            val newContact = Contact(binding.etNewContactName.text.toString(), binding.etNewContactMobileNumber.text.toString())
-            if (newContact.name.isNotBlank() && newContact.mobileNo.isNotBlank()) {
-                // implement logic to add in list, then send back to main activity for recycler view injection, HOW TO EVEN DO THAT
-                binding.etNewContactName.text.clear()
-                binding.etNewContactMobileNumber.text.clear()
+            val newContact = Contact(binding.etNewContactName.text.toString().trim(), binding.etNewContactMobileNumber.text.toString().trim())
 
-                // redirect back
-                val mainActivityIntent = Intent(this, MainActivity::class.java)
-                this.startActivity(mainActivityIntent)
-            } else {
+            // check if fields are blank
+            if (newContact.name.isBlank() || newContact.mobileNo.isBlank()) {
                 Toast.makeText(this, "Fill in the fields", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            // check regex and format
+            val pattern = Pattern.compile("^\\d{4} \\d{3} \\d{4}$")
+            if (!newContact.mobileNo.matches(pattern.toRegex())) {
+                Toast.makeText(this, "Contact number must match this pattern: 0912 345 6789", Toast.LENGTH_LONG).show()
+                return@setOnClickListener
+            }
+
+            try {
+                val database = FirebaseDatabase.getInstance()
+                val contactRef = database.getReference("contacts")
+                contactRef.push().setValue(newContact).addOnSuccessListener {
+                    Toast.makeText(this, "Contact added", Toast.LENGTH_SHORT).show()
+
+                    // redirect to main activity
+                    val mainActivityIntent = Intent(this, MainActivity::class.java)
+                    this.startActivity(mainActivityIntent)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
         }
     }
