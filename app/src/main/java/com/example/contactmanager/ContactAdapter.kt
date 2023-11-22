@@ -1,12 +1,15 @@
 package com.example.contactmanager
 
+import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.contactmanager.databinding.ContactItemBinding
 
 class ContactAdapter(
-    private var contacts: MutableList<Contact>
+    private var contacts: MutableList<Contact>,
+    private var context: Context
 ) : RecyclerView.Adapter<ContactAdapter.ContactViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ContactViewHolder {
@@ -20,9 +23,16 @@ class ContactAdapter(
 
     override fun onBindViewHolder(holder: ContactViewHolder, i: Int) {
         val currentContact = contacts[i]
+        holder.binding.tvContactId.text = currentContact.id
         holder.binding.tvContactTitle.text = currentContact.name
         holder.binding.cbFavorite.isChecked = currentContact.isFavorite
-        holder.binding.cbFavorite.setOnCheckedChangeListener { _, isChecked -> currentContact.isFavorite = isChecked }
+        holder.binding.tvContactTitle.setOnClickListener {
+            val viewContactActivityIntent = Intent(context, ViewContactActivity::class.java)
+            viewContactActivityIntent.putExtra("id", currentContact.id)
+            viewContactActivityIntent.putExtra("name", currentContact.name)
+            viewContactActivityIntent.putExtra("number", currentContact.mobileNo)
+            context.startActivity(viewContactActivityIntent)
+        }
     }
 
     override fun getItemCount(): Int {
@@ -30,19 +40,6 @@ class ContactAdapter(
     }
 
     class ContactViewHolder(val binding: ContactItemBinding) : RecyclerView.ViewHolder(binding.root) { }
-
-    fun addContact(newContact: Contact) {
-//        contacts.add(newContact)
-//        notifyItemInserted(contacts.size - 1)
-    }
-
-    fun deleteContact(contact: Contact) {
-        // TODO: delete item in database, then notifyChanges -> notifyDataSetChanged()
-    }
-
-    fun filterFavorites() {
-
-    }
 }
 
 

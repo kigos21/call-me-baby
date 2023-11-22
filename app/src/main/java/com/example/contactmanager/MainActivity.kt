@@ -33,14 +33,18 @@ class MainActivity : AppCompatActivity() {
                 contacts.clear()
 
                 for (contact in snapshot.children) {
+                    val id = contact.key!!
+
+                    // getting value from snapshot returns <Type>?, so we non-null assert it
+                    // using !! operator
                     val name = contact.child("name").getValue(String::class.java)!!
                     val mobileNo = contact.child("mobileNo").getValue(String::class.java)!!
                     val isFavorite = contact.child("favorite").getValue(Boolean::class.java)!!
 
-                    contacts.add(Contact(name, mobileNo, isFavorite))
+                    contacts.add(Contact(id, name, mobileNo, isFavorite))
                 }
 
-                contactAdapter = ContactAdapter(contacts)
+                contactAdapter = ContactAdapter(contacts, this@MainActivity)
 
                 binding.rvContactItems.adapter = contactAdapter
                 binding.rvContactItems.layoutManager = LinearLayoutManager(this@MainActivity)

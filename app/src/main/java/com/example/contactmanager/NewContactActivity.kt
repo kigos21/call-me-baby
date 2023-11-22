@@ -22,7 +22,7 @@ class NewContactActivity : AppCompatActivity() {
         }
 
         binding.ibCreateContactButton.setOnClickListener {
-            val newContact = Contact(binding.etNewContactName.text.toString().trim(), binding.etNewContactMobileNumber.text.toString().trim())
+            val newContact = Contact(name = binding.etNewContactName.text.toString().trim(), mobileNo = binding.etNewContactMobileNumber.text.toString().trim())
 
             // check if fields are blank
             if (newContact.name.isBlank() || newContact.mobileNo.isBlank()) {
