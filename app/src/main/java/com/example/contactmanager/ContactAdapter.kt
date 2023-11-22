@@ -1,22 +1,16 @@
 package com.example.contactmanager
 
+import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.contactmanager.databinding.ContactItemBinding
-import java.io.Serializable
 
 class ContactAdapter(
-    private var contacts: MutableList<Contact>
+    private var contacts: MutableList<Contact>,
+    private var context: Context
 ) : RecyclerView.Adapter<ContactAdapter.ContactViewHolder>() {
-
-    private lateinit var favorites: MutableList<Contact>
-    private lateinit var unfilteredContacts: MutableList<Contact>
-    class ContactViewHolder(val binding: ContactItemBinding) : RecyclerView.ViewHolder(binding.root) {
-        val tvContactTitle = binding.tvContactTitle
-        val cbFavorite = binding.cbFavorite
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ContactViewHolder {
         val binding = ContactItemBinding.inflate(
@@ -27,44 +21,25 @@ class ContactAdapter(
         return ContactViewHolder(binding);
     }
 
-    fun addContact(newContact: Contact) {
-        contacts.add(newContact)
-        notifyItemInserted(contacts.size - 1)
-    }
-
-    fun deleteContact(contact: Contact) {
-        TODO("Delete the the contact (by reference in memory??)")
-    }
-
-    fun filterFavorites(isFiltering: Boolean) {
-        if (isFiltering) {
-            // save a copy of contacts somewhere
-            unfilteredContacts = contacts
-
-            // create the filtered contacts, and load it to the adapter
-            favorites = contacts.filter { contact: Contact -> contact.isFavorite }.toMutableList()
-            contacts = favorites
-        } else {
-            // filter is out, load the original contact list
-            contacts = unfilteredContacts
+    override fun onBindViewHolder(holder: ContactViewHolder, i: Int) {
+        val currentContact = contacts[i]
+        holder.binding.tvContactId.text = currentContact.id
+        holder.binding.tvContactTitle.text = currentContact.name
+        holder.binding.cbFavorite.isChecked = currentContact.isFavorite
+        holder.binding.tvContactTitle.setOnClickListener {
+            val viewContactActivityIntent = Intent(context, ViewContactActivity::class.java)
+            viewContactActivityIntent.putExtra("id", currentContact.id)
+            viewContactActivityIntent.putExtra("name", currentContact.name)
+            viewContactActivityIntent.putExtra("number", currentContact.mobileNo)
+            context.startActivity(viewContactActivityIntent)
         }
-        notifyDataSetChanged()
     }
 
     override fun getItemCount(): Int {
         return contacts.size
     }
 
-    override fun onBindViewHolder(holder: ContactViewHolder, i: Int) {
-        val currentContact = contacts[i]
-        holder.binding.tvContactTitle.text = currentContact.name
-        holder.binding.cbFavorite.isChecked = currentContact.isFavorite
-        holder.binding.cbFavorite.setOnCheckedChangeListener { _, isChecked -> currentContact.isFavorite = isChecked }
-    }
-
-    fun forceNotifyDataSetChanged() {
-        notifyDataSetChanged()
-    }
+    class ContactViewHolder(val binding: ContactItemBinding) : RecyclerView.ViewHolder(binding.root) { }
 }
 
 
