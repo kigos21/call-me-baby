@@ -1,9 +1,11 @@
 package com.example.contactmanager
 
 import android.content.Intent
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import com.example.contactmanager.databinding.ActivityViewContactBinding
 import com.google.firebase.database.FirebaseDatabase
 
@@ -31,24 +33,37 @@ class ViewContactActivity : AppCompatActivity() {
         }
 
         binding.ibEditButton.setOnClickListener {
-            // TODO: redirect to edit page, package intent and data with the intent, and render
-            // it in intent activity page
+            val editContactActivityIntent = Intent(this, EditContactActivity::class.java)
+            editContactActivityIntent.putExtra("id", id)
+            editContactActivityIntent.putExtra("name", name)
+            editContactActivityIntent.putExtra("number", mobileNo)
+            this.startActivity(editContactActivityIntent)
         }
 
         binding.ibDeleteButton.setOnClickListener {
-            try {
-                val database = FirebaseDatabase.getInstance()
-                val contactRef = database.getReference("contacts")
-                contactRef.child(id).removeValue().addOnSuccessListener {
-                    Toast.makeText(this, "Contact removed", Toast.LENGTH_SHORT).show()
+            val builder = AlertDialog.Builder(this)
+            builder.setTitle("Confirmation")
+            builder.setMessage("Delete the contact?")
+            builder.setPositiveButton("Yes") { _, _ ->
+                try {
+                    val database = FirebaseDatabase.getInstance()
+                    val contactRef = database.getReference("contacts")
+                    contactRef.child(id).removeValue().addOnSuccessListener {
+                        Toast.makeText(this, "Contact removed", Toast.LENGTH_SHORT).show()
 
-                    // redirect to main activity
-                    val mainActivityIntent = Intent(this, MainActivity::class.java)
-                    this.startActivity(mainActivityIntent)
+                        // redirect to main activity
+                        val mainActivityIntent = Intent(this, MainActivity::class.java)
+                        this.startActivity(mainActivityIntent)
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
             }
+            builder.setNegativeButton("No") { dialog, _ ->
+                dialog.dismiss()
+            }
+            val dialog = builder.create()
+            dialog.show()
         }
     }
 }
