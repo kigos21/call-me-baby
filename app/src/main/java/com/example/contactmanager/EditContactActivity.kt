@@ -32,6 +32,8 @@ class EditContactActivity : AppCompatActivity() {
             this.startActivity(mainActivityIntent)
         }
 
+        // on submit click, validate input, then update it in Firebase by referencing its
+        // id in database.getReference("contacts/$id")
         binding.ibEditContactButton.setOnClickListener {
             val editedContact = Contact(name = binding.etEditContactName.text.toString().trim(), mobileNo = binding.etEditContactMobileNumber.text.toString().trim())
 

@@ -17,7 +17,7 @@ class ViewContactActivity : AppCompatActivity() {
         binding = ActivityViewContactBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // put dynamic data
+        // unpack intent, and put dynamic data
         val id: String = intent.getStringExtra("id")!!
         val name: String = intent.getStringExtra("name")!!
         val mobileNo: String = intent.getStringExtra("number")!!

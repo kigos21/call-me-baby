@@ -29,9 +29,10 @@ class MainActivity : AppCompatActivity() {
 
         // read data from database, and pass to recycler view adapter
         val database: FirebaseDatabase = FirebaseDatabase.getInstance()
-        val contactsRef: DatabaseReference = database.getReference("contacts")
+        val contactsRef = database.getReference("contacts").orderByChild("name")
         contactsRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
+                // whenever data changes in the database, clear these lists and re-populate
                 contacts.clear()
                 favorites.clear()
 
@@ -51,6 +52,8 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
 
+                // pass the general contacts in the adapter if checkbox is not checked,
+                // else pass the favorites
                 contactAdapter = if (binding.cbShowFavorites.isChecked) {
                     ContactAdapter(favorites, this@MainActivity)
                 } else {
