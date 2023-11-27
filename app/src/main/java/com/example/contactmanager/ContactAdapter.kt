@@ -4,8 +4,10 @@ import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.contactmanager.databinding.ContactItemBinding
+import com.google.firebase.database.FirebaseDatabase
 
 class ContactAdapter(
     private var contacts: MutableList<Contact>,
@@ -32,6 +34,18 @@ class ContactAdapter(
             viewContactActivityIntent.putExtra("name", currentContact.name)
             viewContactActivityIntent.putExtra("number", currentContact.mobileNo)
             context.startActivity(viewContactActivityIntent)
+        }
+
+        holder.binding.cbFavorite.setOnCheckedChangeListener { _, isChecked ->
+            try {
+                val database = FirebaseDatabase.getInstance()
+                val updateRef = database.getReference("contacts/${currentContact.id}")
+                val updatedContact = HashMap<String, Any>()
+                updatedContact["favorite"] = isChecked
+                updateRef.updateChildren(updatedContact)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
     }
 
