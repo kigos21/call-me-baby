@@ -65,5 +65,10 @@ class ViewContactActivity : AppCompatActivity() {
             val dialog = builder.create()
             dialog.show()
         }
+
+        binding.ibCallButton.setOnClickListener {
+            TODO("implement a call function using native android function, " +
+                    "if too difficult, just abandon the feature")
+        }
     }
 }
