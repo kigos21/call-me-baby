@@ -17,6 +17,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var contactAdapter: ContactAdapter
     private lateinit var contacts: MutableList<Contact>
+    private lateinit var favorites: MutableList<Contact>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,6 +25,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         contacts = mutableListOf()
+        favorites = mutableListOf()
 
         // read data from database, and pass to recycler view adapter
         val database: FirebaseDatabase = FirebaseDatabase.getInstance()
@@ -31,6 +33,7 @@ class MainActivity : AppCompatActivity() {
         contactsRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 contacts.clear()
+                favorites.clear()
 
                 for (contact in snapshot.children) {
                     val id = contact.key!!
@@ -40,11 +43,19 @@ class MainActivity : AppCompatActivity() {
                     val name = contact.child("name").getValue(String::class.java)!!
                     val mobileNo = contact.child("mobileNo").getValue(String::class.java)!!
                     val isFavorite = contact.child("favorite").getValue(Boolean::class.java)!!
+                    val contact = Contact(id, name, mobileNo, isFavorite)
 
-                    contacts.add(Contact(id, name, mobileNo, isFavorite))
+                    contacts.add(contact)
+                    if (isFavorite) {
+                        favorites.add(contact)
+                    }
                 }
 
-                contactAdapter = ContactAdapter(contacts, this@MainActivity)
+                contactAdapter = if (binding.cbShowFavorites.isChecked) {
+                    ContactAdapter(favorites, this@MainActivity)
+                } else {
+                    ContactAdapter(contacts, this@MainActivity)
+                }
 
                 binding.rvContactItems.adapter = contactAdapter
                 binding.rvContactItems.layoutManager = LinearLayoutManager(this@MainActivity)
@@ -61,7 +72,13 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.cbShowFavorites.setOnCheckedChangeListener { _, isChecked ->
-            // TODO: filter data according to favorites
+            contactAdapter = if (isChecked) {
+                ContactAdapter(favorites, this@MainActivity)
+            } else {
+                ContactAdapter(contacts, this@MainActivity)
+            }
+
+            binding.rvContactItems.adapter = contactAdapter
         }
     }
 }
