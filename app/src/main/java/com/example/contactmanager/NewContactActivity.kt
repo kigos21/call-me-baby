@@ -31,9 +31,9 @@ class NewContactActivity : AppCompatActivity() {
             }
 
             // check regex and format
-            val pattern = Pattern.compile("^\\d{4} \\d{3} \\d{4}$")
+            val pattern = Pattern.compile("^\\d{11}\$")
             if (!newContact.mobileNo.matches(pattern.toRegex())) {
-                Toast.makeText(this, "Contact number must match this pattern: 0912 345 6789", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, "Contact number must match this pattern: 09123456789", Toast.LENGTH_LONG).show()
                 return@setOnClickListener
             }
 
