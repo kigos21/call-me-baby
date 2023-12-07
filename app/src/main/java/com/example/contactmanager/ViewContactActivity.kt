@@ -24,7 +24,7 @@ class ViewContactActivity : AppCompatActivity() {
 
         binding.tvContactId.text = id
         binding.tvContactName.text = name
-        binding.tvContactNumber.text = mobileNo
+        binding.tvContactNumber.text = "${mobileNo.substring(0,4)} ${mobileNo.substring(4,7)} ${mobileNo.substring(7)}"
 
         // set different listeners
         binding.ibBackButton.setOnClickListener {
