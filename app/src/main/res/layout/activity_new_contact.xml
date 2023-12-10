@@ -48,6 +48,24 @@
 
         </LinearLayout>
 
+        <ImageButton
+            android:id="@+id/ivNewContactAvatar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:srcCompat="@tools:sample/avatars"
+            android:layout_marginTop="22dp"
+            android:background="@android:color/transparent" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat_regular"
+            android:text="Tap to edit"
+            android:textAlignment="center"
+            android:textColor="@color/foreground"
+            android:textSize="12sp"
+            android:layout_marginTop="4dp"/>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
