@@ -8,9 +8,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.contactmanager.databinding.ActivityMainBinding
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import java.util.UUID
 
 class MainActivity : AppCompatActivity() {
 
@@ -24,12 +24,22 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Preferences - UUID
+        val sharedPreferences = getSharedPreferences("DEVICE_SETTINGS", MODE_PRIVATE)
+        val deviceId = sharedPreferences.getString("device_id", "")
+
+        if (deviceId.isNullOrBlank()) {
+            val editor = sharedPreferences.edit()
+            editor.putString("device_id", UUID.randomUUID().toString())
+            editor.apply()
+        }
+
         contacts = mutableListOf()
         favorites = mutableListOf()
 
         // read data from database, and pass to recycler view adapter
         val database: FirebaseDatabase = FirebaseDatabase.getInstance()
-        val contactsRef = database.getReference("contacts").orderByChild("name")
+        val contactsRef = database.getReference("contacts").child(deviceId!!).orderByChild("name")
         contactsRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 // whenever data changes in the database, clear these lists and re-populate
@@ -44,11 +54,11 @@ class MainActivity : AppCompatActivity() {
                     val name = contact.child("name").getValue(String::class.java)!!
                     val mobileNo = contact.child("mobileNo").getValue(String::class.java)!!
                     val isFavorite = contact.child("favorite").getValue(Boolean::class.java)!!
-                    val contact = Contact(id, name, mobileNo, isFavorite)
+                    val newContact = Contact(id, name, mobileNo, isFavorite)
 
-                    contacts.add(contact)
+                    contacts.add(newContact)
                     if (isFavorite) {
-                        favorites.add(contact)
+                        favorites.add(newContact)
                     }
                 }
 

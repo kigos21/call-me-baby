@@ -3,7 +3,6 @@ package com.example.contactmanager
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.widget.Toast
 import com.example.contactmanager.databinding.ActivityEditContactBinding
 import com.google.firebase.database.FirebaseDatabase
@@ -16,6 +15,10 @@ class EditContactActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityEditContactBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        // get device UUID
+        val sharedPreferences = getSharedPreferences("DEVICE_SETTINGS", MODE_PRIVATE)
+        val deviceId = sharedPreferences.getString("device_id", "")
 
         // put dynamic data
         val id: String = intent.getStringExtra("id")!!
@@ -52,7 +55,7 @@ class EditContactActivity : AppCompatActivity() {
 
             try {
                 val database = FirebaseDatabase.getInstance()
-                val updateRef = database.getReference("contacts/$id")
+                val updateRef = database.getReference("contacts/${deviceId}/$id")
                 val updatedContact = HashMap<String, Any>()
                 updatedContact["name"] = editedContact.name
                 updatedContact["mobileNo"] = editedContact.mobileNo

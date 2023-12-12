@@ -1,7 +1,6 @@
 package com.example.contactmanager
 
 import android.content.Intent
-import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
@@ -16,6 +15,10 @@ class ViewContactActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityViewContactBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        // get device UUID
+        val sharedPreferences = getSharedPreferences("DEVICE_SETTINGS", MODE_PRIVATE)
+        val deviceId = sharedPreferences.getString("device_id", "")
 
         // unpack intent, and put dynamic data
         val id: String = intent.getStringExtra("id")!!
@@ -47,7 +50,7 @@ class ViewContactActivity : AppCompatActivity() {
             builder.setPositiveButton("Yes") { _, _ ->
                 try {
                     val database = FirebaseDatabase.getInstance()
-                    val contactRef = database.getReference("contacts")
+                    val contactRef = database.getReference("contacts").child(deviceId!!)
                     contactRef.child(id).removeValue().addOnSuccessListener {
                         Toast.makeText(this, "Contact removed", Toast.LENGTH_SHORT).show()
 

@@ -16,6 +16,10 @@ class NewContactActivity : AppCompatActivity() {
         binding = ActivityNewContactBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // get device UUID
+        val sharedPreferences = getSharedPreferences("DEVICE_SETTINGS", MODE_PRIVATE)
+        val deviceId = sharedPreferences.getString("device_id", "")
+
         binding.ibBackButton.setOnClickListener {
             val mainActivityIntent = Intent(this, MainActivity::class.java)
             this.startActivity(mainActivityIntent)
@@ -39,7 +43,7 @@ class NewContactActivity : AppCompatActivity() {
 
             try {
                 val database = FirebaseDatabase.getInstance()
-                val contactRef = database.getReference("contacts")
+                val contactRef = database.getReference("contacts").child(deviceId!!)
                 contactRef.push().setValue(newContact).addOnSuccessListener {
                     Toast.makeText(this, "Contact added", Toast.LENGTH_SHORT).show()
 
