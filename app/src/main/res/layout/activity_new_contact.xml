@@ -50,11 +50,13 @@
 
         <ImageButton
             android:id="@+id/ivNewContactAvatar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            tools:srcCompat="@tools:sample/avatars"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_gravity="center"
+            android:scaleType="fitCenter"
             android:layout_marginTop="22dp"
-            android:background="@android:color/transparent" />
+            android:background="@android:color/white"
+            android:src="@drawable/default_avatar" />
 
         <TextView
             android:layout_width="match_parent"
