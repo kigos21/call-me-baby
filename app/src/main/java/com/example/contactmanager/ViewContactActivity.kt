@@ -1,12 +1,18 @@
 package com.example.contactmanager
 
+import android.Manifest
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
+import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.example.contactmanager.databinding.ActivityViewContactBinding
 import com.google.firebase.database.FirebaseDatabase
+
 
 class ViewContactActivity : AppCompatActivity() {
 
@@ -24,6 +30,7 @@ class ViewContactActivity : AppCompatActivity() {
         val id: String = intent.getStringExtra("id")!!
         val name: String = intent.getStringExtra("name")!!
         val mobileNo: String = intent.getStringExtra("number")!!
+        val REQUEST_CODE = 123
 
         binding.tvContactId.text = id
         binding.tvContactName.text = name
@@ -70,8 +77,24 @@ class ViewContactActivity : AppCompatActivity() {
         }
 
         binding.ibCallButton.setOnClickListener {
-            TODO("implement a call function using native android function, " +
-                    "if too difficult, just abandon the feature")
+            val callIntent: Intent = Uri.parse("tel:"+mobileNo).let {number ->
+                Intent(Intent.ACTION_CALL, number)
+            }
+            if (ContextCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.CALL_PHONE
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf<String>(Manifest.permission.CALL_PHONE),
+                    REQUEST_CODE
+                )
+            } else {
+                startActivity(callIntent)
+            }
+
+
         }
     }
 }

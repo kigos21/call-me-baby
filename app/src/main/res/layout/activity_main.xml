@@ -68,22 +68,22 @@
             android:id="@+id/cbShowFavorites"
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:layout_marginRight="7dp"
             android:buttonTint="@color/foreground"
             android:scaleX="1"
             android:scaleY="1"
-            app:layout_constraintEnd_toStartOf="@+id/tvFavoritesHeading"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/tvFavoritesHeading"
             android:layout_width="wrap_content"
             android:layout_height="15dp"
+            android:layout_marginRight="7dp"
             android:fontFamily="@font/montserrat_regular"
             android:text="Favorites"
             android:textColor="@color/foreground"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/cbShowFavorites"
             app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
