@@ -80,6 +80,15 @@
             android:textSize="28sp"
             android:textStyle="bold" />
 
+        <ImageButton
+            android:id="@+id/ibContactAvatar"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_gravity="center"
+            android:scaleType="fitCenter"
+            android:layout_marginTop="22dp"
+            android:background="@android:color/white" />
+
         <TextView
             android:id="@+id/tvMobileNumberLabel"
             android:layout_width="wrap_content"

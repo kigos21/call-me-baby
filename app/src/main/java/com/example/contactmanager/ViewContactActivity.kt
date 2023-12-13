@@ -1,10 +1,13 @@
 package com.example.contactmanager
 
 import android.content.Intent
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import com.bumptech.glide.Glide
 import com.example.contactmanager.databinding.ActivityViewContactBinding
 import com.google.firebase.database.FirebaseDatabase
 
@@ -23,11 +26,20 @@ class ViewContactActivity : AppCompatActivity() {
         // unpack intent, and put dynamic data
         val id: String = intent.getStringExtra("id")!!
         val name: String = intent.getStringExtra("name")!!
+        val avatarURL: String = intent.getStringExtra("avatarURL")!!
         val mobileNo: String = intent.getStringExtra("number")!!
+
+        Log.i("jd", "AvatarURL: $avatarURL")
 
         binding.tvContactId.text = id
         binding.tvContactName.text = name
         binding.tvContactNumber.text = "${mobileNo.substring(0,4)} ${mobileNo.substring(4,7)} ${mobileNo.substring(7)}"
+
+        if (avatarURL == "default") {
+            binding.ibContactAvatar.setImageURI(Uri.parse("android.resource://com.example.contactmanager/" + R.drawable.default_avatar))
+        } else {
+            Glide.with(this).load(avatarURL).into(binding.ibContactAvatar)
+        }
 
         // set different listeners
         binding.ibBackButton.setOnClickListener {
@@ -39,6 +51,7 @@ class ViewContactActivity : AppCompatActivity() {
             val editContactActivityIntent = Intent(this, EditContactActivity::class.java)
             editContactActivityIntent.putExtra("id", id)
             editContactActivityIntent.putExtra("name", name)
+            editContactActivityIntent.putExtra("avatarURL", avatarURL)
             editContactActivityIntent.putExtra("number", mobileNo)
             this.startActivity(editContactActivityIntent)
         }

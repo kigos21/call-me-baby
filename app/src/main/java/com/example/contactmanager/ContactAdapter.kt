@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.contactmanager.databinding.ContactItemBinding
 import com.google.firebase.database.FirebaseDatabase
@@ -13,6 +12,7 @@ import com.google.firebase.database.FirebaseDatabase
 // as well as context object, since an adapter class would not have a "this" context
 class ContactAdapter(
     private var contacts: MutableList<Contact>,
+    private var deviceId: String,
     private var context: Context
 ) : RecyclerView.Adapter<ContactAdapter.ContactViewHolder>() {
 
@@ -22,7 +22,7 @@ class ContactAdapter(
             parent,
             false
         )
-        return ContactViewHolder(binding);
+        return ContactViewHolder(binding)
     }
 
     // bind contact list to the contact view holder (contact_item.xml)
@@ -40,6 +40,7 @@ class ContactAdapter(
             val viewContactActivityIntent = Intent(context, ViewContactActivity::class.java)
             viewContactActivityIntent.putExtra("id", currentContact.id)
             viewContactActivityIntent.putExtra("name", currentContact.name)
+            viewContactActivityIntent.putExtra("avatarURL", currentContact.avatarURL)
             viewContactActivityIntent.putExtra("number", currentContact.mobileNo)
             context.startActivity(viewContactActivityIntent)
         }
@@ -49,7 +50,7 @@ class ContactAdapter(
         holder.binding.cbFavorite.setOnCheckedChangeListener { _, isChecked ->
             try {
                 val database = FirebaseDatabase.getInstance()
-                val updateRef = database.getReference("contacts/${currentContact.id}")
+                val updateRef = database.getReference("contacts/${deviceId}/${currentContact.id}")
                 val updatedContact = HashMap<String, Any>()
                 updatedContact["favorite"] = isChecked
                 updateRef.updateChildren(updatedContact)

@@ -52,9 +52,10 @@ class MainActivity : AppCompatActivity() {
                     // getting value from snapshot returns <Type>?, so we non-null assert it
                     // using !! operator
                     val name = contact.child("name").getValue(String::class.java)!!
+                    val avatarURL = contact.child("avatarURL").getValue(String::class.java)!!
                     val mobileNo = contact.child("mobileNo").getValue(String::class.java)!!
                     val isFavorite = contact.child("favorite").getValue(Boolean::class.java)!!
-                    val newContact = Contact(id, name, mobileNo, isFavorite)
+                    val newContact = Contact(id, name, avatarURL, mobileNo, isFavorite)
 
                     contacts.add(newContact)
                     if (isFavorite) {
@@ -65,9 +66,9 @@ class MainActivity : AppCompatActivity() {
                 // pass the general contacts in the adapter if checkbox is not checked,
                 // else pass the favorites
                 contactAdapter = if (binding.cbShowFavorites.isChecked) {
-                    ContactAdapter(favorites, this@MainActivity)
+                    ContactAdapter(favorites, deviceId, this@MainActivity)
                 } else {
-                    ContactAdapter(contacts, this@MainActivity)
+                    ContactAdapter(contacts, deviceId, this@MainActivity)
                 }
 
                 binding.rvContactItems.adapter = contactAdapter
@@ -86,9 +87,9 @@ class MainActivity : AppCompatActivity() {
 
         binding.cbShowFavorites.setOnCheckedChangeListener { _, isChecked ->
             contactAdapter = if (isChecked) {
-                ContactAdapter(favorites, this@MainActivity)
+                ContactAdapter(favorites, deviceId, this@MainActivity)
             } else {
-                ContactAdapter(contacts, this@MainActivity)
+                ContactAdapter(contacts, deviceId, this@MainActivity)
             }
 
             binding.rvContactItems.adapter = contactAdapter
