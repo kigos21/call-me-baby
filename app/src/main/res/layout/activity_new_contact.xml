@@ -49,7 +49,7 @@
         </LinearLayout>
 
         <ImageButton
-            android:id="@+id/ivNewContactAvatar"
+            android:id="@+id/ibNewContactAvatar"
             android:layout_width="150dp"
             android:layout_height="150dp"
             android:layout_gravity="center"
