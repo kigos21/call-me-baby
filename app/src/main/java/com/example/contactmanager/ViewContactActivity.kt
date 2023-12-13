@@ -1,8 +1,12 @@
 package com.example.contactmanager
 
+import android.Manifest
 import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
@@ -28,6 +32,7 @@ class ViewContactActivity : AppCompatActivity() {
         val name: String = intent.getStringExtra("name")!!
         val avatarURL: String = intent.getStringExtra("avatarURL")!!
         val mobileNo: String = intent.getStringExtra("number")!!
+        val REQUEST_CODE = 123
 
         Log.i("jd", "AvatarURL: $avatarURL")
 
@@ -83,8 +88,23 @@ class ViewContactActivity : AppCompatActivity() {
         }
 
         binding.ibCallButton.setOnClickListener {
-            TODO("implement a call function using native android function, " +
-                    "if too difficult, just abandon the feature")
+            val callIntent: Intent = Uri.parse("tel:$mobileNo").let { number ->
+                Intent(Intent.ACTION_CALL, number)
+            }
+
+            if (ContextCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.CALL_PHONE
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf<String>(Manifest.permission.CALL_PHONE),
+                    REQUEST_CODE
+                )
+            } else {
+                startActivity(callIntent)
+            }
         }
     }
 }

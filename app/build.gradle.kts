@@ -11,6 +11,7 @@ android {
     defaultConfig {
         applicationId = "com.example.contactmanager"
         minSdk = 24
+        //noinspection EditedTargetSdkVersion
         targetSdk = 33
         versionCode = 1
         versionName = "1.0"
