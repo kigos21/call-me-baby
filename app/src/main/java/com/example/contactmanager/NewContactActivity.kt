@@ -1,15 +1,18 @@
 package com.example.contactmanager
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
+import android.widget.ImageView
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import com.bumptech.glide.Glide
 import com.example.contactmanager.databinding.ActivityNewContactBinding
 import com.google.firebase.database.FirebaseDatabase
+import java.io.File
 import com.google.firebase.storage.FirebaseStorage
 import java.util.UUID
 import java.util.regex.Pattern
@@ -37,6 +40,7 @@ class NewContactActivity : AppCompatActivity() {
         // get device UUID
         val sharedPreferences = getSharedPreferences("DEVICE_SETTINGS", MODE_PRIVATE)
         val deviceId = sharedPreferences.getString("device_id", "")
+        val SELECT_PICTURE = 200
 
         // set default avatar as the imageURI, if not changed, then default avatar is uploaded
         imageURI = Uri.parse("default")
@@ -48,6 +52,37 @@ class NewContactActivity : AppCompatActivity() {
 
         binding.ibNewContactAvatar.setOnClickListener {
             pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+        }
+
+        val img: ImageView = findViewById(R.id.ivNewContactAvatar)
+
+        fun getFileSize(uri: Uri): Long {
+            val file = File(uri.path)
+            return file.length()
+        }
+
+        val pickImageLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK && result.data != null) {
+                val selectedImageUri: Uri? = result.data?.data
+
+                selectedImageUri?.let {uri ->
+                    val fileSize = getFileSize(uri)
+                    val maxSizeBytes = 5 * 1024 * 1024 //5MB
+
+                    if (fileSize <= maxSizeBytes) {
+                        Glide.with(this).load(uri).into(img)
+                    } else {
+                        Toast.makeText(this, "Choose an image that is less than 5MB", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
+
+        binding.ivNewContactAvatar.setOnClickListener {
+            val getImageIntent = Intent(Intent.ACTION_PICK)
+            getImageIntent.type = "image/*"
+
+            pickImageLauncher.launch(getImageIntent)
         }
 
         binding.ibCreateContactButton.setOnClickListener {
