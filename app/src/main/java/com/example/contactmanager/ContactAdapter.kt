@@ -42,6 +42,7 @@ class ContactAdapter(
             viewContactActivityIntent.putExtra("name", currentContact.name)
             viewContactActivityIntent.putExtra("avatarURL", currentContact.avatarURL)
             viewContactActivityIntent.putExtra("number", currentContact.mobileNo)
+            viewContactActivityIntent.putExtra("ringtone", currentContact.ringtone)
             context.startActivity(viewContactActivityIntent)
         }
 

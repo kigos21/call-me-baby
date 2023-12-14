@@ -11,6 +11,9 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.contactmanager.databinding.ActivityNewContactBinding
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
+import java.io.File
+import java.io.IOException
+import java.io.InputStream
 import java.util.UUID
 import java.util.regex.Pattern
 
@@ -22,6 +25,14 @@ class NewContactActivity : AppCompatActivity() {
         // Callback is invoked after the user selects a media item or closes the
         // photo picker.
         if (uri != null) {
+            val fileSize = getFileSize(uri)
+            val maxSizeBytes = 1 * 1024 * 1024 // 5MB
+
+            if (fileSize > maxSizeBytes) {
+                Toast.makeText(this, "Choose an image that is less than 1MB", Toast.LENGTH_SHORT).show()
+                return@registerForActivityResult
+            }
+
             binding.ibNewContactAvatar.setImageURI(uri)
             imageURI = uri
         } else {
@@ -119,5 +130,26 @@ class NewContactActivity : AppCompatActivity() {
                 e.printStackTrace()
             }
         }
+    }
+
+    private fun getFileSize(uri: Uri): Long {
+        var fileSize: Long = 0
+        var inputStream: InputStream? = null
+
+        try {
+            inputStream = contentResolver.openInputStream(uri)
+            fileSize = inputStream?.available()?.toLong() ?: 0
+        } catch (e: IOException) {
+            // Handle the exception
+            e.printStackTrace()
+        } finally {
+            try {
+                inputStream?.close()
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
+        }
+
+        return fileSize
     }
 }
