@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Call Me Baby</string>
     <string name="search">Search</string>
+    <string name="change"><u>Choose</u></string>
 </resources>

@@ -1,6 +1,7 @@
 package com.example.contactmanager
 
 import android.content.Intent
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -55,7 +56,8 @@ class MainActivity : AppCompatActivity() {
                     val avatarURL = contact.child("avatarURL").getValue(String::class.java)!!
                     val mobileNo = contact.child("mobileNo").getValue(String::class.java)!!
                     val isFavorite = contact.child("favorite").getValue(Boolean::class.java)!!
-                    val newContact = Contact(id, name, avatarURL, mobileNo, isFavorite)
+                    val ringtone = contact.child("ringtone").getValue(String::class.java)!!
+                    val newContact = Contact(id, name, avatarURL, mobileNo, isFavorite, ringtone)
 
                     contacts.add(newContact)
                     if (isFavorite) {
