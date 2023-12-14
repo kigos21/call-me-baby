@@ -6,6 +6,9 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
@@ -91,9 +94,10 @@ class ViewContactActivity : AppCompatActivity() {
         }
 
         binding.ibCallButton.setOnClickListener {
-            val callIntent: Intent = Uri.parse("tel:"+mobileNo).let {number ->
+            val callIntent: Intent = Uri.parse("tel:$mobileNo").let { number ->
                 Intent(Intent.ACTION_CALL, number)
             }
+
             if (ContextCompat.checkSelfPermission(
                     this,
                     Manifest.permission.CALL_PHONE
@@ -107,8 +111,6 @@ class ViewContactActivity : AppCompatActivity() {
             } else {
                 startActivity(callIntent)
             }
-
-
         }
     }
 }

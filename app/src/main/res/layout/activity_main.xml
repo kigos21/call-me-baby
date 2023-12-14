@@ -83,7 +83,7 @@
             android:text="Favorites"
             android:textColor="@color/foreground"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/cbShowFavorites"
+            app:layout_constraintEnd_toStartOf="@+id/cbShowFavorites"
             app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
