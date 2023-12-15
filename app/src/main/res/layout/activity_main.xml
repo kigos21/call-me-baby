@@ -118,4 +118,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/create_link" />
 
+    <ImageView
+        android:id="@+id/ibDialView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        app:srcCompat="@drawable/dial_pad_svgrepo_com__1_"
+        android:layout_marginLeft="24dp"
+        android:layout_marginBottom="30dp"
+        android:contentDescription="Dial a number"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteX="167dp" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

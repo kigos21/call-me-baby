@@ -87,6 +87,11 @@ class MainActivity : AppCompatActivity() {
             this.startActivity(newContactActivityIntent)
         }
 
+        binding.ibDialView.setOnClickListener {
+            val goToDial = Intent(this, DialActivity::class.java)
+            this.startActivity(goToDial)
+        }
+
         binding.cbShowFavorites.setOnCheckedChangeListener { _, isChecked ->
             contactAdapter = if (isChecked) {
                 ContactAdapter(favorites, deviceId, this@MainActivity)
